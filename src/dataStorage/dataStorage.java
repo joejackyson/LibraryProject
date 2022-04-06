@@ -7,6 +7,7 @@
  */
 package dataStorage;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 
@@ -21,7 +22,7 @@ public class dataStorage implements Withdrawable{
 
     // public constructor: specify subclass type
     public dataStorage(String type){
-        type = type;
+        this.type = type;
     }
         
     // Set String type = subclass name
@@ -43,10 +44,38 @@ public class dataStorage implements Withdrawable{
         return arrData;
     }
     
+    // set all keys and values formatted as a hashtable
+    public void reverseFormat(ArrayList<String> lines){
+        Hashtable data = new Hashtable();
+        for (String line:lines){
+            String[] entry = line.split("=");
+            if (entry.length > 1){
+                data.put(entry[0], entry[1]);
+            }
+
+        }
+        setData(data);
+    }
+    
     // Override in subclass: Return all keys in data
     public String[] getKeys(){
         String[] string = {""};
         return string;
+    }
+    
+    // Override in subclass: return ID as string
+    public String getId(){
+        return "";
+    }
+    
+    // Override in subclass: return Name or Title as String
+    public String getName(){
+        return "";
+    }
+    
+    // Override in subclass: set name or title
+    public void setName(String name){
+        
     }
     
     // Override in subclass: Return hashtable of instance variables and their values
@@ -54,6 +83,12 @@ public class dataStorage implements Withdrawable{
         Hashtable empty = new Hashtable();
         return empty;
     }
+    
+    // Override in subclass: Set instance variables = values
+    public void setData(Hashtable data){
+        
+    }
+    
 
     // Override in subclass: return bool true if can withdraw
     @Override 

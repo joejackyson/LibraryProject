@@ -25,12 +25,18 @@ public class Book extends dataStorage {
     private boolean available = true;
     private double dateWithdrawn = 0.0;   // DATE.MONTH.YEAR
     
+    public Book(String id){
+        super("book");
+        this.id = id;
+    }
+    
     public Book(){
         super("book");
     }
 
     
     // Setters + Getters for instance variables
+    @Override
     public String getId() {
         return id;
     }
@@ -47,11 +53,13 @@ public class Book extends dataStorage {
         this.author = author;
     }
 
-    public String getTitle() {
+    @Override
+    public String getName() {
         return title;
     }
 
-    public void setTitle(String title) {
+    @Override
+    public void setName(String title) {
         this.title = title;
     }
 
@@ -90,15 +98,24 @@ public class Book extends dataStorage {
     }
     
     // Mark this book as withdrawn
-    public void withdrawBook(){
-        // Set dateWithdrawn to today's date
-        available=false;
+    public void withdraw() throws InvalidAction {
+        if(!available){
+            throw new InvalidAction("Withdrawl", "Book not available");
+        } else{
+            // Set dateWithdrawn to today's date
+            available=false;
+        }
+        
     }
     
     // Return this book
-    public void returnBook(){
-        dateWithdrawn = 0.0;
-        available = true;
+    public void returnBook() throws InvalidAction{
+        if (available){
+            throw new InvalidAction("Return", "Book is already returned");
+        } else {
+            dateWithdrawn = 0.0;
+            available = true;
+        }
     }
         
     // Return true if book is available
