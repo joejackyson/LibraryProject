@@ -3,7 +3,8 @@
  */
 package dataStorage;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 /**
  *
  * @author Celia
@@ -23,7 +24,9 @@ public class Book extends dataStorage {
     
     // Instance variables - Not edited by user
     private boolean available = true;
-    private double dateWithdrawn = 0.0;   // DATE.MONTH.YEAR
+    private double timeWithdrawn = 0.0;   // DATE.MONTH.YEAR
+    private LocalDate dateWithdrawn;
+    private static int withdrawWindow = 30;
     
     public Book(String id){
         super("book");
@@ -90,11 +93,16 @@ public class Book extends dataStorage {
     
     // Return amount owed on this book
     public double getFine(){
-        if (canWithdraw() && dateWithdrawn!=0.0){
-            // Calculate fine based on days late
+        
+        timeWithdrawn = ChronoUnit.DAYS.between(LocalDate.now(), dateWithdrawn);
+        double fine = 0.0;
+        
+        // Calculate fine based on days late
+        if (canWithdraw() && timeWithdrawn >= withdrawWindow){ 
+            fine = 0.50 + 0.50*(timeWithdrawn-withdrawWindow);  
         }
         
-        return 0.0;
+        return fine;
     }
     
     // Mark this book as withdrawn
@@ -102,7 +110,8 @@ public class Book extends dataStorage {
         if(!available){
             throw new InvalidAction("Withdrawl", "Book not available");
         } else{
-            // Set dateWithdrawn to today's date
+            // Set dateWithdrawn to today's date  
+            dateWithdrawn = LocalDate.now();
             available=false;
         }
         
@@ -113,7 +122,7 @@ public class Book extends dataStorage {
         if (available){
             throw new InvalidAction("Return", "Book is already returned");
         } else {
-            dateWithdrawn = 0.0;
+            timeWithdrawn = 0.0;
             available = true;
         }
     }
@@ -121,7 +130,11 @@ public class Book extends dataStorage {
     // Return true if book is available
     @Override 
     public boolean canWithdraw() {
-        return available;
+        if(available){
+            return true;
+        }else{
+            return false;
+        }
     }
     
     
